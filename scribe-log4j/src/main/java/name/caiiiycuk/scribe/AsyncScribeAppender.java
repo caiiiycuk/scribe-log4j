@@ -11,7 +11,7 @@ import org.apache.log4j.AsyncAppender;
  * <pre>
  * 	log4j.rootLogger=DEBUG, scribe
  *
- *	log4j.appender.scribe=name.caiiiycuk.scribe.ScribeAppender
+ *	log4j.appender.scribe=name.caiiiycuk.scribe.AsyncScribeAppender
  *	log4j.appender.scribe.hostname=my-app.ru
  *	log4j.appender.scribe.scribeHost=127.0.0.1
  *	log4j.appender.scribe.scribePort=1463
