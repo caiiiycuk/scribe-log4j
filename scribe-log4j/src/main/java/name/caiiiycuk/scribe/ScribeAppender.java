@@ -159,7 +159,7 @@ public class ScribeAppender extends AppenderSkeleton {
 			}
 			
 			try {
-				String message = String.format("%s %s", hostname, layout
+				String message = String.format("[%s] %s", hostname, layout
 						.format(event));
 				LogEntry entry = new LogEntry(scribeCategory, message);
 
