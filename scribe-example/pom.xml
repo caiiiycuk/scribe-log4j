@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>name.caiiiycuk</groupId>
   <artifactId>scribe-example</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>1.0</version>
   <name>Example of sribe log4j appender</name>
   
   	<build>
@@ -15,6 +15,29 @@
 					<source>1.6</source>
 					<target>1.6</target>
 				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+			        <version>2.2</version>
+			        <configuration>
+					<descriptorRefs>
+				        <descriptorRef>jar-with-dependencies</descriptorRef>
+				        </descriptorRefs>
+					<archive>
+				            <manifest>
+				              <mainClass>name.caiiiycuk.scribe.examples.ForeverLog</mainClass>
+				            </manifest>
+				          </archive>
+			        </configuration>
+			        <executions>
+			          <execution>
+			            <id>make-assembly</id>
+			            <phase>package</phase>
+			            <goals>
+			              <goal>single</goal>
+			            </goals>
+			          </execution>
+			        </executions>
 			</plugin>
 		</plugins>
 	</build>
