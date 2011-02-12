@@ -1,3 +1,7 @@
+.soft{
+    background: #fff6de;
+}
+
 .red {
     background: #FF0000 url('images/red-bg.jpg') repeat-x;
 }
@@ -47,15 +51,29 @@
 }
 
 .content {
-    position: relative;
-    width: 835px;
-    margin: auto;
+//    position: relative;
+//    width: 835px;
+//    margin: auto;
 }
 
 .fixed {
     height: 200px;
     overflow: auto;
 }
+
+.time {
+    position: relative;
+    float: left;
+    background: #AA3333;
+    color: white;
+    font-size: 24px;
+}
+
+.title {
+    text-align: center;
+    font-size: 24px;
+}
+
 
 hr {
     border: none;

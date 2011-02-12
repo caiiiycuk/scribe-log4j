@@ -7,36 +7,14 @@
   <script type="text/javascript" src="js/jquery-1.5.min.js"></script> 
   <script type="text/javascript" src="js/jquery-ui-1.8.9.min.js"></script> 
 </head>
-<body class="red">
+<body class="soft">
 
-  <div>
-    <div class="menu">
-       <a href="#" onclick="javascript: toggleScheme();">Color</a>  
-    </div>
-    <div style="width: 100%"><!-- Spring --></div>
-  </div>
-
-  <script type="text/javascript">
-    function toggleScheme() {
-    $('.yellow').toggleClass("green");    
-    $('.red').toggleClass("yellow");
-    $('.green').toggleClass("white");
-    }
-  </script>
-
-  <script>
-//    $(function() {
-//    $( "#accordion" ).accordion();
-//    });
-  </script>
-
-  <div class="content space yellow border top shadow">
-    Messages:
+  <div class="content space">
     <div id="accordion">
     <!-- MESSAGE START -->
-      <h3><a href="#">$error-title</a></h3>
+      <div class="time space">$time</div><div class="title space">$error-title</div></br>
       <div class="fixed white space border shadow">
-	$error-full
+	<pre>$error-full</pre>
       </div>
     <!-- MESSAGE END -->
     </div>
