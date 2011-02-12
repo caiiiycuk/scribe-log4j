@@ -17,7 +17,7 @@ my @log_files = ('/opt/production/portal/tomcat1_old/logs/catalina.out');
 # For example: 2011-11-11 14:45:33, 444 ERROR Service ..., 
 # mathcing with '^\d{4,4}-\d{2,2}-\d{2,2}\s{1,1}\d{2,2}:\d{2,2}:\d{2,2},\d{1,3}\s{1,1}'
 #
-my $new_message = '^\d{4,4}-\d{2,2}-\d{2,2}\s{1,1}\d{2,2}:\d{2,2}:\d{2,2},\d{1,3}\s{1,1}';
+my $new_message = '^(\d{4,4}-\d{2,2}-\d{2,2}\s{1,1}\d{2,2}:\d{2,2}:\d{2,2},\d{1,3})\s{1,1}';
 
 #
 # Types of message to accept
@@ -42,10 +42,14 @@ sub prepareMessage {
     my ($template, $error_full) = @_;
 
     if ($error_full =~ /$accept_message/) {
-	$error_full =~ s/\n/<br\/>/ig;
-	my $error_title = substr($error_full, 0, 140) . "...";
-	$template =~ s/\$error-title/$error_title/gi;
-	$template =~ s/\$error-full/$error_full/gi;
+#	$error_full =~ s/\n/<br\/>/ig;
+
+	if ($error_full =~ $new_message) {
+	    my $time = $1;
+	    $template =~ s/\$error-time/$time/ig;
+	}
+
+	$template =~ s/\$error-full/$error_full/ig;
 	
 	return $template;
     }
