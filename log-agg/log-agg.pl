@@ -89,13 +89,12 @@ while (<TEMPLATE>) {
 }
 
 foreach my $log (@log_files) {
-#    open(LOG, $log) || die $!;
-#    binmode(LOG, ":utf8");
     my $file = File::ReadBackwards->new("$log") || die "can't read file '$log': $!\n";
 
     my $message = "";
-#    while (<LOG>) {
     while (defined($_ = $file->readline)) {
+	$message = $_ . $message;
+
 	if (/$new_message/i) {
 	    my $prepared = prepareMessage($template, $message);
 	    
@@ -107,12 +106,8 @@ foreach my $log (@log_files) {
 
 	    $message = "";
 	}
-
-	$message = $message . $_;
     }
 
-    print INDEX prepareMessage($template, $message);
-#   close(LOG);
     $file->close();
 }
 
