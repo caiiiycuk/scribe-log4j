@@ -2,6 +2,7 @@
 
 use strict;
 use utf8;
+use File::ReadBackwards;
 
 # =============
 # Configuration
@@ -88,11 +89,13 @@ while (<TEMPLATE>) {
 }
 
 foreach my $log (@log_files) {
-    open(LOG, $log) || die $!;
-    binmode(LOG, ":utf8");
+#    open(LOG, $log) || die $!;
+#    binmode(LOG, ":utf8");
+    my $file = File::ReadBackwards->new("$log") || die "can't read file '$log': $!\n";
 
     my $message = "";
-    while (<LOG>) {
+#    while (<LOG>) {
+    while (defined($_ = $file->readline)) {
 	if (/$new_message/i) {
 	    my $prepared = prepareMessage($template, $message);
 	    
@@ -109,7 +112,8 @@ foreach my $log (@log_files) {
     }
 
     print INDEX prepareMessage($template, $message);
-    close(LOG);
+#   close(LOG);
+    $file->close();
 }
 
 #
