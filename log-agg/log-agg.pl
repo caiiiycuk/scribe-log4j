@@ -21,6 +21,10 @@ my @log_files = ('/opt/production/portal/tomcat1_old/logs/catalina.out');
 my $new_message = '^(\d{4,4}-\d{2,2}-\d{2,2}\s{1,1}\d{2,2}:\d{2,2}:\d{2,2},\d{1,3})\s{1,1}';
 
 #
+# 
+#
+
+#
 # Types of message to accept
 #
 my $accept_message = 'ERROR';
@@ -40,13 +44,13 @@ my $target = '/opt/WWW/dl.4geo.ru/tmp/index.html';
 # ================
 
 sub prepareMessage {
-    my ($template, $error_full) = @_;
+    my ($template, $error_full, $count) = @_;
 
     if ($error_full =~ /$accept_message/) {
 #	$error_full =~ s/\n/<br\/>/ig;
 
 	if ($error_full =~ $new_message) {
-	    my $time = $1;
+	    my $time = "$1 ($count)";
 	    $template =~ s/\$error-time/$time/ig;
 	}
 
@@ -62,31 +66,10 @@ sub prepareMessage {
 # Main program
 # ============
 
-open(TEMPLATE, "template.html") || die $!;
-binmode(TEMPLATE, ":utf8");
-
-open(INDEX, ">$target") || die $!;
-binmode(INDEX, ":utf8");
-
 #
-# Write header
+# Read log files into messages hash
 #
-
-while (<TEMPLATE>) {
-    last if (/<!-- MESSAGE START -->/);
-    print INDEX;
-}
-
-my $template = $_;
-my $count = 0;
-
-#
-# Messages template
-#
-while (<TEMPLATE>) {
-    $template = $template .  $_;
-    last if (/<!-- MESSAGE END -->/);
-}
+my %messages = ();
 
 foreach my $log (@log_files) {
     my $file = File::ReadBackwards->new("$log") || die "can't read file '$log': $!\n";
@@ -96,14 +79,11 @@ foreach my $log (@log_files) {
 	$message = $_ . $message;
 
 	if (/$new_message/i) {
-	    my $prepared = prepareMessage($template, $message);
-	    
-	    if ($prepared) {
-		print INDEX $prepared;
-		$count++;
-		last if ($count == $max_count);
-	    }
+	    $messages{$message} = 0 if (!exists $messages{$message});
+	    $messages{$message}++;
 
+	    last if (scalar(values(%messages)) > $max_count);
+	    
 	    $message = "";
 	}
     }
@@ -112,12 +92,48 @@ foreach my $log (@log_files) {
 }
 
 #
+# Open resources
+#
+open(TEMPLATE, "template.html") || die $!;
+binmode(TEMPLATE, ":utf8");
+
+open(INDEX, ">$target") || die $!;
+binmode(INDEX, ":utf8");
+
+#
+# Write header
+#
+while (<TEMPLATE>) {
+    last if (/<!-- MESSAGE START -->/);
+    print INDEX;
+}
+
+#
+# Messages template
+#
+my $template = $_;
+while (<TEMPLATE>) {
+    $template = $template .  $_;
+    last if (/<!-- MESSAGE END -->/);
+}
+
+#
+# Write messages
+#
+foreach my $message (keys %messages) {
+    my $prepared = prepareMessage($template, $message, $messages{$message});
+    print INDEX $prepared if ($prepared);
+}
+
+#
 # Write footer
 #
-
 while (<TEMPLATE>) {
     print INDEX;
 }
 
+#
+# Close resources
+#
 close(INDEX);
 close(TEMPLATE);
