@@ -7,9 +7,32 @@ use utf8;
 # Configuration
 # =============
 
-my @log_files = ('/home/caiiiycuk/exmp.log');
-my $new_message = '^\d{1,2}\.\d{1,2}\.\d{4,4}\s{1,1}\d{1,2}:\d{1,2}:\d{1,2}\s{1,1}';
-my $accept_message = 'ERROR|WARN';
+#
+# List of log-files for look
+#
+my @log_files = ('/opt/production/portal/tomcat1_old/logs/catalina.out');
+
+#
+# RegExp for new message in log
+# For example: 2011-11-11 14:45:33, 444 ERROR Service ..., 
+# mathcing with '^\d{4,4}-\d{2,2}-\d{2,2}\s{1,1}\d{2,2}:\d{2,2}:\d{2,2},\d{1,3}\s{1,1}'
+#
+my $new_message = '^\d{4,4}-\d{2,2}-\d{2,2}\s{1,1}\d{2,2}:\d{2,2}:\d{2,2},\d{1,3}\s{1,1}';
+
+#
+# Types of message to accept
+#
+my $accept_message = 'ERROR';
+
+#
+# Count of messages to display
+#
+my $max_count = 50;
+
+#
+# Target file (index.html)
+#
+my $target = '/opt/WWW/dl.4geo.ru/tmp/index.html';
 
 # ================
 # Function`s scope
@@ -18,8 +41,9 @@ my $accept_message = 'ERROR|WARN';
 sub prepareMessage {
     my ($template, $error_full) = @_;
 
-    if ($error_full =~ /$accept_message/i) {
-	my $error_title = substr($error_full, 0, 30) . "...";
+    if ($error_full =~ /$accept_message/) {
+	$error_full =~ s/\n/<br\/>/ig;
+	my $error_title = substr($error_full, 0, 140) . "...";
 	$template =~ s/\$error-title/$error_title/gi;
 	$template =~ s/\$error-full/$error_full/gi;
 	
@@ -36,7 +60,7 @@ sub prepareMessage {
 open(TEMPLATE, "template.html") || die $!;
 binmode(TEMPLATE, ":utf8");
 
-open(INDEX, ">index.html") || die $!;
+open(INDEX, ">$target") || die $!;
 binmode(INDEX, ":utf8");
 
 #
@@ -49,6 +73,7 @@ while (<TEMPLATE>) {
 }
 
 my $template = $_;
+my $count = 0;
 
 #
 # Messages template
@@ -59,13 +84,20 @@ while (<TEMPLATE>) {
 }
 
 foreach my $log (@log_files) {
-    open(LOG, $log);
+    open(LOG, $log) || die $!;
     binmode(LOG, ":utf8");
 
     my $message = "";
     while (<LOG>) {
 	if (/$new_message/i) {
-	    print INDEX prepareMessage($template, $message);
+	    my $prepared = prepareMessage($template, $message);
+	    
+	    if ($prepared) {
+		print INDEX $prepared;
+		$count++;
+		last if ($count == $max_count);
+	    }
+
 	    $message = "";
 	}
 
