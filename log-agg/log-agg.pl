@@ -40,7 +40,7 @@ my $target = '/opt/WWW/https.w42.ru/logs/tomcat1.html';
 #
 # Template file
 #
-my $template_file = "template.html";
+my $template_file = "/opt/WWW/https.w42.ru/logs/template.html";
 
 # ================
 # Function`s scope
@@ -69,7 +69,7 @@ sub prepareMessage {
 my $last_md5;
 
 if (-e $target) {
-    open(INDEX, "$target") || die $!;
+    open(INDEX, "$target") || die "Unable open target '$target', $! \n";
     binmode(INDEX, ":utf8");
 
     $_ = <INDEX>;
@@ -82,7 +82,7 @@ if (-e $target) {
 #
 # Read log files into messages hash
 #
-my $file = File::ReadBackwards->new("$log_file") || die "can't read file '$log_file': $!\n";
+my $file = File::ReadBackwards->new("$log_file") || die "Can't read log file '$log_file': $!\n";
 
 my %messages = ();
 my $message = "";
@@ -125,7 +125,7 @@ if (-e $target) {
     $target_backup = $target_backup ."_". $last_md5 . ".html";
 
     print $target, "->", $target_backup, "\n";
-    copy($target, $target_backup) or die "Copy failed: $!";
+    copy($target, $target_backup) or die "Copy failed from '$target' to '$target_backup', $! \n";
 
     $target_backup =~ s/^.*\///i;
 }
@@ -133,10 +133,10 @@ if (-e $target) {
 #
 # Open resources
 #
-open(TEMPLATE, "$template_file") || die $!;
+open(TEMPLATE, "$template_file") || die "Unable to open template '$template_file', $! \n";
 binmode(TEMPLATE, ":utf8");
 
-open(INDEX, ">$target") || die $!;
+open(INDEX, ">$target") || die "Unable to open target '$target', $! \n";
 binmode(INDEX, ":utf8");
 
 #
