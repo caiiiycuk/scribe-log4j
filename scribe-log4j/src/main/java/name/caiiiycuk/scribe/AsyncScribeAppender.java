@@ -26,19 +26,17 @@ import org.apache.log4j.AsyncAppender;
  */
 public class AsyncScribeAppender extends AsyncAppender {
 
-	private String 	hostname;
+
 	private String 	scribeHost;
 	private int 	scribePort;
 	private String 	scribeCategory;
 	private boolean printExceptionStack;
 
-	public String getHostname() {
-		return hostname;
-	}
+    private boolean addStackTraceToMessage;
+    private long timeToWaitBeforeRetry;
+    private String localStoreForwardClassName;
 
-	public void setHostname(String hostname) {
-		this.hostname = hostname;
-	}
+    private int sizeOfInMemoryStoreForward;
 
 	public String getScribeHost() {
 		return scribeHost;
@@ -68,19 +66,58 @@ public class AsyncScribeAppender extends AsyncAppender {
 		this.printExceptionStack = printExceptionStack;
 	}
 
-	@Override
+    public boolean isAddStackTraceToMessage() {
+        return addStackTraceToMessage;
+    }
+
+    public void setAddStackTraceToMessage(boolean addStackTraceToMessage) {
+        this.addStackTraceToMessage = addStackTraceToMessage;
+    }
+
+    public long getTimeToWaitBeforeRetry() {
+        return timeToWaitBeforeRetry;
+    }
+
+    public void setTimeToWaitBeforeRetry(long timeToWaitBeforeRetry) {
+        this.timeToWaitBeforeRetry = timeToWaitBeforeRetry;
+    }
+
+    public String getLocalStoreForwardClassName() {
+        return localStoreForwardClassName;
+    }
+
+    public void setLocalStoreForwardClassName(String localStoreForwardClassName) {
+        this.localStoreForwardClassName = localStoreForwardClassName;
+    }
+
+    public int getSizeOfInMemoryStoreForward() {
+        return sizeOfInMemoryStoreForward;
+    }
+
+    public void setSizeOfInMemoryStoreForward(int sizeOfInMemoryStoreForward) {
+        this.sizeOfInMemoryStoreForward = sizeOfInMemoryStoreForward;
+    }
+
+    @Override
 	public void activateOptions() {
 		super.activateOptions();
 		synchronized (this) {
 			ScribeAppender scribeAppender = new ScribeAppender();
-			scribeAppender.setLayout(getLayout());
-			scribeAppender.setHostname(getHostname());
+
+            scribeAppender.setLayout(getLayout());
 			scribeAppender.setScribeHost(getScribeHost());
 			scribeAppender.setScribePort(getScribePort());
 			scribeAppender.setScribeCategory(getScribeCategory());
 			scribeAppender.setPrintExceptionStack(printExceptionStack);
 			scribeAppender.activateOptions();
-			addAppender(scribeAppender);
+
+            //new
+            scribeAppender.setAddStackTraceToMessage(isAddStackTraceToMessage());
+            scribeAppender.setTimeToWaitBeforeRetry(getTimeToWaitBeforeRetry());
+            scribeAppender.setLocalStoreForwardClassName(getLocalStoreForwardClassName());
+            scribeAppender.setSizeOfInMemoryStoreForward(this.getSizeOfInMemoryStoreForward());
+
+            addAppender(scribeAppender);
 		}
 	}
 
