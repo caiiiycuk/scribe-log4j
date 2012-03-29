@@ -95,7 +95,7 @@ public class ScribeAppender extends AppenderSkeleton {
 
         if (this.localStoreForwardClassName != null && localStoreForwardInstance == null){
             try {
-                Class clazz = Class.forName(this.localStoreForwardClassName);
+                Class<?> clazz = Class.forName(this.localStoreForwardClassName);
                 this.localStoreForwardInstance = (ILocalStoreForward) clazz.newInstance();
             } catch (Exception e) {
                 if (printExceptionStack) {
@@ -370,12 +370,18 @@ public class ScribeAppender extends AppenderSkeleton {
         this.connectionFailureTimeStamp = System.currentTimeMillis();
     }
 
-    private void sendLogEntry (LogEntry entry) throws TException{
+    private void sendLogEntry (LogEntry entry) throws TException {
         try{
             logEntries.add(entry);
             client.Log(logEntries);
-        }
-        finally{
+        } catch(TException e) {
+            //Incase of exception add the entry to local store
+        	if (this.localStoreForwardInstance != null) {
+        		this.localStoreForwardInstance.putLogEntry(entry);
+        	}
+        	
+            throw e;
+        } finally{
             logEntries.clear();
         }
     }
