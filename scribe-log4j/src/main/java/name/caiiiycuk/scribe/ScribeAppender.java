@@ -178,9 +178,9 @@ public class ScribeAppender extends AppenderSkeleton {
 	private boolean connect() {
 		if (!isConfigurationValid()) {
 			if (printExceptionStack) {
-				System.out.println("Worn configuration for name.caiiiycuk.scribe.ScribeAppender");
+				System.err.println("Wrong configuration for name.caiiiycuk.scribe.ScribeAppender");
 				
-				System.out.println(StringUtils.join(new Object[] {
+				System.err.println(StringUtils.join(new Object[] {
 						"hostname: ", hostname, "; scribeHost: ", scribeHost, "; scribePort: ", scribePort, "; scribeCategory: ", scribeCategory, "; printExceptionStack: ", printExceptionStack
 				}, ""));
 				
@@ -190,7 +190,6 @@ public class ScribeAppender extends AppenderSkeleton {
 
         Socket socket = null;
 		try {
-            System.out.println("Attempting to connect to scribe server: " + this.scribeHost);
 			// Thrift boilerplate code
 			logEntries = new ArrayList<LogEntry>(1);
 
