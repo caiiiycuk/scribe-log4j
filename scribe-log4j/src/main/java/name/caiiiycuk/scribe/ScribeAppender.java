@@ -97,9 +97,11 @@ public class ScribeAppender extends AppenderSkeleton {
             try {
                 Class<?> clazz = Class.forName(this.localStoreForwardClassName);
                 this.localStoreForwardInstance = (ILocalStoreForward) clazz.newInstance();
+                this.localStoreForwardInstance.setAppender(this);
             } catch (Exception e) {
                 if (printExceptionStack) {
                     System.err.println ("Error instantiating instance of " + ILocalStoreForward.class.getName() + " for given class: " + this.localStoreForwardClassName);
+                    e.printStackTrace();
                     System.exit(1);
                 }
             }

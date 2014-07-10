@@ -1,5 +1,6 @@
 package name.caiiiycuk.scribe;
 
+import org.apache.log4j.Appender;
 import scribe.thrift.LogEntry;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -31,4 +32,7 @@ public class InMemoryQueueLocalStoreForward implements ILocalStoreForward {
     public synchronized LogEntry getLogEntry() {
         return queue.poll();
     }
+
+    @Override
+    public void setAppender(Appender appender) {}
 }

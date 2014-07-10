@@ -1,5 +1,6 @@
 package name.caiiiycuk.scribe;
 
+import org.apache.log4j.Appender;
 import scribe.thrift.LogEntry;
 
 /**
@@ -25,4 +26,6 @@ public interface ILocalStoreForward {
      * @return
      */
     public LogEntry getLogEntry();
+
+    public void setAppender(Appender appender);
 }
