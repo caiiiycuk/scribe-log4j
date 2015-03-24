@@ -67,13 +67,11 @@ log4j.appender.scribe.hostname	| This hostname will be appended to the each log 
 log4j.appender.scribe.scribeHost |	Sribe server host
 log4j.appender.scribe.scribePort |	Scribe server port
 log4j.appender.scribe.scribeCategory |	Category of this application used by scribe to categorize
-log4j.appender.scribe.printExceptionStack |	If exception occurs when sending log or connection to server it will be printed to sys log if this property is true
+log4j.appender.scribe.printExceptionStack |	If this propery is set to true then exceptions will be print to stdout
 log4j.appender.scribe.addStackTraceToMessage |	Appends the stack trace to the message
-log4j.appender.scribe.timeToWaitBeforeRetry	| When connection is not present or when it goes away. the "timeToWaitBeforeRetry" property is used to determine how long after connection failure to retry again.
+log4j.appender.scribe.timeToWaitBeforeRetry	| The "timeToWaitBeforeRetry" property is used to determine how long appender will wait after connection failure to try to restore connection.
 log4j.appender.scribe.localStoreForwardClassName |	Classname of local store forward provider
-log4j.appender.scribe.sizeOfInMemoryStoreForward |	If the "sizeOfInMemoryStoreForward" property is present, then it will use a default in memroy implementation of local storage forward provider. As always, you can supply own by implementing same interface and giving the following config
-<param name="localStoreForwardClassName" value="my.domain.scribe.ILocalStoreForwardImpl">
-</param>
+log4j.appender.scribe.sizeOfInMemoryStoreForward |	If the "sizeOfInMemoryStoreForward" property is present, then it will use a default in memroy implementation of local storage forward provider. You can provide own implementation by implementing same interface and giving the following config ```<param name="localStoreForwardClassName" value="my.domain.scribe.ILocalStoreForwardImpl"></param>```
 
 ## Building scribe
 [Ubuntu 10.10 | OpenSUSE 11.2](https://code.google.com/p/scribe-log4j/wiki/ConfigureScribe)
