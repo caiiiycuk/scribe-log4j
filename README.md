@@ -74,4 +74,4 @@ log4j.appender.scribe.localStoreForwardClassName |	Classname of local store forw
 log4j.appender.scribe.sizeOfInMemoryStoreForward |	If the "sizeOfInMemoryStoreForward" property is present, then it will use a default in memroy implementation of local storage forward provider. You can provide own implementation by implementing same interface and giving the following config ```<param name="localStoreForwardClassName" value="my.domain.scribe.ILocalStoreForwardImpl"></param>```
 
 ## Building scribe
-[Ubuntu 10.10 | OpenSUSE 11.2](https://code.google.com/p/scribe-log4j/wiki/ConfigureScribe)
+[Ubuntu 10.10 | OpenSUSE 11.2](https://github.com/caiiiycuk/scribe-log4j/blob/wiki/ConfigureScribe.md)
