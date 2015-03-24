@@ -20,9 +20,9 @@ There are 3 maven projects:
   mvn install
   ```
 
-* Run your scribe server that`s agregate logs (see short instruction below)
+* Run your scribe server that agregates logs (see short instruction below)
 
-* Fix log4j.properties in `scribe-log4j/scribe-example/src/main/resources/log4j.properties` if needed. Default configuration is:
+* If needed fix log4j.properties in `scribe-log4j/scribe-example/src/main/resources/log4j.properties`. Default configuration is:
   ```properties
   log4j.rootLogger=DEBUG, console, scribe
   
